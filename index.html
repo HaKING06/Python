@@ -1,0 +1,1131 @@
+<!-- 
+    İKÜ TBP1001 - Algoritma ve Programlama I Akademik Bilgi Portalı
+    Geliştirici: halitguns06.dev
+    Ders Kodu: TBP1001 / BIL101 - Bilgisayar Programcılığı
+    Özellik: 1500+ Satır Teknik İçerik, 4'lü Lab Ünitesi, 2-Kolon Ödev Grid, Mobil Drawer
+-->
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
+    <title>İKÜ TBP1001 Python Master Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        
+        :root {
+            --bg-main: #020617;
+            --sidebar-bg: #0f172a;
+            --accent: #38bdf8;
+            --border: #1e293b;
+            --python-blue: #3776ab;
+            --python-yellow: #ffd343;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: #f1f5f9; 
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+
+        /* Navigation Style */
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+        }
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.1) 0%, transparent 100%);
+            border-left: 3px solid var(--accent);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .view-section { display: none; height: 100%; opacity: 0; transform: translateY(10px); }
+        .view-section.active { display: flex; flex-direction: column; animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: var(--accent); }
+
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        .method-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.05);
+            color: var(--accent);
+        }
+
+        .logic-code-block {
+            display: none;
+            background: #000;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid #1e293b;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #10b981;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin: auto;
+            height: 320px;
+        }
+
+        .quiz-item.open .answer-panel { max-height: 1500px; opacity: 1; margin-top: 1.5rem; }
+        .answer-panel { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; }
+
+        .jump-btn {
+            font-size: 10px;
+            font-weight: 900;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .jump-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: translateX(5px); }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .code-snippet {
+            background: #020617;
+            border: 1px solid #1e293b;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+        }
+        .code-kw { color: #f472b6; font-weight: bold; }
+        .code-fn { color: #38bdf8; }
+        .code-str { color: #fbbf24; }
+        .code-op { color: #818cf8; }
+
+        .homework-step {
+            position: relative;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+        .homework-step::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+/* PC Görünümü Fix */
+@media (min-width: 769px) {
+    #sidebar {
+        position: relative !important;
+        transform: none !important;
+        z-index: 10 !important;
+    }
+    #mobile-overlay { display: none !important; }
+}
+
+/* Mobil Görünüm Fix */
+@media (max-width: 768px) {
+    .sidebar { 
+        position: fixed !important; 
+        top: 0; 
+        left: 0; 
+        width: 280px !important;
+        height: 100vh !important;
+        transform: translateX(-100%); 
+        z-index: 5000 !important; /* Her şeyin en üstünde */
+        display: flex !important; /* Gizliyse görünür yap */
+    }
+    .sidebar.open { transform: translateX(0); }
+    
+    /* Overlay'in sadece mobilde ve butonların altında kalması için */
+    #mobile-overlay {
+        z-index: 4000 !important;
+    }
+    
+    .main-layout { padding-top: 64px; }
+    /* Menü içindeki logoyu mobilde de göster */
+    .sidebar .md\:block { display: block !important; }
+}
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-950">
+
+    <!-- Mobile Header -->
+<header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-6 z-[4500]">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-black text-xs text-white">İKÜ</div>
+        <span class="font-bold text-sm text-white uppercase italic">Python Portal</span>
+    </div>
+    <button id="menu-toggle-btn" onclick="toggleSidebar()" class="text-white text-2xl p-2 z-[5100] relative">
+        <i class="fas fa-bars" id="menu-icon"></i>
+    </button>
+</header>
+
+
+
+<div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[4800] hidden opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar w-full md:w-80 h-full bg-[#0f172a] border-r border-slate-800 flex flex-col transition-transform duration-300 z-[3800]">
+        <div class="p-8 border-b border-slate-800 hidden md:block text-center">
+            <i class="fab fa-python text-5xl text-blue-500 mb-4 drop-shadow-[0_0_10px_rgba(56,189,248,0.3)]"></i>
+            <h1 class="text-xl font-black text-white uppercase italic tracking-tighter">PYTHON TBP1001</h1>
+            <p class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-widest">Akademik Arşiv Portal</p>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto custom-scroll" id="navSystem">
+            <div class="text-[10px] font-black text-slate-600 uppercase px-4 mt-4 mb-2 tracking-[0.3em]">Genel Giriş</div>
+            <button onclick="switchPage('dashboard')" class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm" data-id="dashboard">
+                <i class="fas fa-home w-5"></i> Dashboard
+            </button>
+            <button onclick="switchPage('lab')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="lab">
+                <i class="fas fa-flask-vial w-5 text-center"></i> İnteraktif Lab
+            </button>
+
+            <div class="text-[10px] font-black text-slate-600 uppercase px-4 mt-6 mb-2 tracking-[0.3em]">Teknik Müfredat</div>
+            <button onclick="switchPage('basics')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="basics">
+                <i class="fas fa-hashtag w-5"></i> 01. Sayılar & Dönüşüm
+            </button>
+            <button onclick="switchPage('strings')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="strings">
+                <i class="fas fa-font w-5 text-center"></i> 02. Karakter Mekanikleri
+            </button>
+            <button onclick="switchPage('logic')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="logic">
+                <i class="fas fa-code-merge w-5 text-center"></i> 03. Mantık & Koşullar
+            </button>
+            <button onclick="switchPage('loops')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="loops">
+                <i class="fas fa-arrows-rotate w-5 text-center"></i> 04. Döngü Sistemleri
+            </button>
+            <button onclick="switchPage('collections')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="collections">
+                <i class="fas fa-layer-group w-5 text-center"></i> 05. Koleksiyon Hiyerarşisi
+            </button>
+            <button onclick="switchPage('advanced')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="advanced">
+                <i class="fas fa-laptop-code w-5 text-center"></i> 06. Fonksiyon & Lambda
+            </button>
+            <button onclick="switchPage('modules')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="modules">
+                <i class="fas fa-box-archive w-5 text-center"></i> 07. Modüller & math
+            </button>
+
+            <div class="text-[10px] font-black text-slate-600 uppercase px-4 mt-6 mb-2 tracking-[0.3em]">Analiz & Sınav</div>
+            <button onclick="switchPage('homework')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="homework">
+                <i class="fas fa-file-invoice w-5 text-center"></i> Ödev Kod Analizi
+            </button>
+            <button onclick="switchPage('arena')" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-slate-400" data-id="arena">
+                <i class="fas fa-trophy w-5 text-center"></i> Quiz Arena (50+ Trick)
+            </button>
+        </nav>
+
+        <div class="p-6 border-t border-slate-800 bg-slate-900/30">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest text-center leading-relaxed">
+                İstanbul Kültür Üniversitesi<br>TBP1001 Algoritma I
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto custom-scroll relative bg-slate-950 main-layout" id="main-content">
+        
+        <div class="min-h-full flex flex-col relative">
+            
+            <!-- Decoration Background -->
+            <div class="absolute top-0 right-0 w-2/3 h-2/3 bg-blue-600/[0.04] blur-[160px] pointer-events-none"></div>
+
+            <!-- View: Dashboard (Simple Edition) -->
+            <section id="dashboard" class="view-section active p-6 md:p-16 space-y-12">
+                <div class="flex-1 flex flex-col justify-center items-center text-center max-w-4xl mx-auto space-y-10 py-12">
+                    <div class="w-24 h-24 bg-blue-600/10 rounded-3xl border border-blue-500/20 flex items-center justify-center animate-bounce shadow-[0_0_20px_rgba(56,189,248,0.1)]">
+                        <i class="fab fa-python text-5xl text-blue-500"></i>
+                    </div>
+                    <h2 class="text-4xl md:text-7xl font-black tracking-tighter text-white leading-tight italic uppercase">
+                        İKÜ TBP1001 <br> <span class="text-blue-500">ÇALIŞMA PORTALI.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg md:text-2xl leading-relaxed font-medium max-w-2xl">
+                        Hocanın verdiği ödev ve derste işledikleriyle oluşmuş quize ve sunuma hazırlık sitesi. Başarılar.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-6">
+                        <button onclick="switchPage('basics')" class="px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-3xl text-sm transition-all shadow-xl shadow-blue-600/30 active:scale-95">DERSLERE BAŞLA</button>
+                        <button onclick="switchPage('homework')" class="px-12 py-5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-black rounded-3xl text-sm transition-all border border-slate-700 active:scale-95">ÖDEV ANALİZLERİ</button>
+                    </div>
+                </div>
+                
+                <div class="max-w-xl mx-auto glass-card p-10 mt-12 border-slate-800 shadow-2xl relative">
+                    <div class="absolute inset-0 bg-blue-500/[0.02] pointer-events-none"></div>
+                    <div class="chart-container relative z-10">
+                        <canvas id="mainRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- View: Lab -->
+            <section id="lab" class="view-section p-6 md:p-16 space-y-12">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-12">
+                        <h2 class="text-5xl font-black uppercase italic text-blue-500 tracking-tighter leading-tight">Interaktif <br> Deney Alanı.</h2>
+                        <p class="text-slate-400 mt-4 text-lg italic max-w-3xl leading-relaxed">Buradaki test araçlarıyla kodun çıktısını gör. "ÖĞREN" butonu seni dökümanın ilgili teknik kısmına götürür.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <!-- Lab 1: Arithmetic -->
+                        <div class="glass-card p-10 space-y-10 shadow-2xl border border-slate-800 group transition-all">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-6">
+                                <h3 class="font-black text-xs uppercase tracking-widest text-blue-400 flex items-center gap-3"><i class="fas fa-calculator text-lg"></i> Aritmetik İşlem</h3>
+                                <button onclick="jumpToSection('basics', 'arithmetic-anchor')" class="jump-btn">MANTIĞI ÖĞREN <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="flex gap-8">
+                                <div class="flex-1 space-y-4 text-center">
+                                    <label class="text-[10px] text-slate-600 font-black uppercase tracking-widest">Sayı X</label>
+                                    <input type="number" id="mathA" value="17" class="w-full bg-slate-900 border border-slate-800 p-5 rounded-3xl font-black text-white text-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" oninput="runMathLab()">
+                                </div>
+                                <div class="flex items-center text-slate-700 font-black pt-12 italic uppercase text-3xl">vs</div>
+                                <div class="flex-1 space-y-4 text-center">
+                                    <label class="text-[10px] text-slate-600 font-black uppercase tracking-widest">Sayı Y</label>
+                                    <input type="number" id="mathB" value="5" class="w-full bg-slate-900 border border-slate-800 p-5 rounded-3xl font-black text-white text-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" oninput="runMathLab()">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-4 font-mono">
+                                <div class="flex justify-between items-center p-6 bg-black/60 rounded-3xl border border-slate-800 group-hover:border-blue-500/30 transition-all"><span class="text-white font-bold text-sm">// (Tam Bölme)</span><span id="resFloor" class="text-emerald-400 font-black text-3xl tracking-tighter">3</span></div>
+                                <div class="flex justify-between items-center p-6 bg-black/60 rounded-3xl border border-slate-800 group-hover:border-amber-500/30 transition-all"><span class="text-white font-bold text-sm">% (Modulo)</span><span id="resMod" class="text-amber-400 font-black text-3xl tracking-tighter">2</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Lab 2: Slicing -->
+                        <div class="glass-card p-10 space-y-10 shadow-2xl border border-slate-800 group transition-all">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-6">
+                                <h3 class="font-black text-sm uppercase tracking-widest text-purple-400 flex items-center gap-3"><i class="fas fa-font text-lg"></i> String Slicing</h3>
+                                <button onclick="jumpToSection('strings', 'slice-anchor')" class="jump-btn">DERSİ GÖR <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="text-center py-12 bg-slate-950/90 border border-slate-800 rounded-[2.5rem] relative overflow-hidden shadow-2xl">
+                                <div class="text-6xl font-black tracking-[0.25em] text-blue-500 relative z-10" id="visualS">PYTHON</div>
+                                <div class="absolute inset-0 bg-blue-500/5 blur-3xl opacity-50"></div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-6">
+                                <div class="space-y-3"><label class="text-[9px] text-slate-600 font-black uppercase text-center block">Start</label><input type="number" id="slStart" value="0" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center text-white font-black outline-none focus:ring-2 focus:ring-purple-500" oninput="runSliceLab()"></div>
+                                <div class="space-y-3"><label class="text-[9px] text-slate-600 font-black uppercase text-center block">Stop</label><input type="number" id="slStop" value="4" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center text-white font-black outline-none focus:ring-2 focus:ring-purple-500" oninput="runSliceLab()"></div>
+                                <div class="space-y-3"><label class="text-[9px] text-slate-600 font-black uppercase text-center block">Step</label><input type="number" id="slStep" value="1" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center text-white font-black outline-none focus:ring-2 focus:ring-purple-500" oninput="runSliceLab()"></div>
+                            </div>
+                            <div class="p-8 bg-slate-950/60 rounded-[2rem] border border-dashed border-slate-700 text-center relative shadow-inner group-hover:border-purple-500/50 transition-all">
+                                <div id="slOutput" class="text-5xl font-black text-white italic tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">"PYTH"</div>
+                                <code class="text-[12px] text-purple-400 font-bold bg-purple-500/10 px-6 py-2 rounded-full border border-purple-500/20 mt-6 block shadow-lg" id="slCode">s[0:4:1]</code>
+                            </div>
+                        </div>
+
+                        <!-- Lab 3: Boolean -->
+                        <div class="glass-card p-10 space-y-10 shadow-2xl border border-slate-800 group transition-all">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-6">
+                                <h3 class="font-black text-sm uppercase tracking-widest text-emerald-500 flex items-center gap-3"><i class="fas fa-code-branch text-lg"></i> Boolean Logic</h3>
+                                <button onclick="jumpToSection('logic', 'bool-anchor')" class="jump-btn">DERSİ ÖĞREN <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="flex flex-col gap-10 items-center bg-slate-950/40 p-10 rounded-[2.5rem] border border-slate-800 shadow-inner">
+                                <div class="flex gap-4 flex-1 w-full">
+                                    <input type="number" id="logicA" value="10" class="w-full bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center text-white font-black text-2xl outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xl" oninput="runLogicLab()">
+                                    <select id="logicOp" class="bg-slate-900 border border-slate-800 p-5 rounded-2xl text-white font-black italic shadow-2xl text-xl outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer" onchange="runLogicLab()"><option value="==">==</option><option value="!=">!=</option><option value=">">></option><option value="<">&lt;</option><option value=">=">&gt;=</option><option value="<=">&lt;=</option></select>
+                                    <input type="number" id="logicB" value="5" class="w-full bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center text-white font-black text-2xl outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xl" oninput="runLogicLab()">
+                                </div>
+                                <div class="text-5xl font-black text-emerald-400 px-16 py-8 bg-emerald-500/10 rounded-[2rem] border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.2)] min-w-[220px] text-center uppercase tracking-tighter" id="logicRes">TRUE</div>
+                            </div>
+                        </div>
+
+                        <!-- Lab 4: Casting -->
+                        <div class="glass-card p-10 space-y-10 shadow-2xl bg-blue-600/[0.01] border border-slate-800 group transition-all">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-6">
+                                <h3 class="font-black text-sm uppercase tracking-widest text-blue-500 flex items-center gap-3"><i class="fas fa-sync text-lg"></i> Tip Dönüşümü</h3>
+                                <button onclick="jumpToSection('basics', 'casting-anchor')" class="jump-btn">DÖNÜŞÜMÜ ÖĞREN <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="flex flex-col gap-6">
+                                <div class="space-y-4">
+                                    <label class="text-[11px] text-slate-500 font-black uppercase tracking-widest text-center block">Input Verisi (String)</label>
+                                    <input type="text" id="castIn" value="123.4" class="w-full bg-slate-900 border border-slate-800 p-8 rounded-3xl text-white font-mono text-center shadow-2xl outline-none focus:ring-2 focus:ring-blue-500 text-xl font-bold" oninput="runCastingLab()">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                    <div class="p-6 bg-black/50 rounded-3xl border border-slate-800 text-center shadow-lg group hover:border-blue-500/30 transition-all"><span class="text-[10px] text-slate-600 font-black uppercase block mb-4">int()</span><span id="resInt" class="text-white font-black text-2xl">123</span></div>
+                                    <div class="p-6 bg-black/50 rounded-3xl border border-slate-800 text-center shadow-lg group hover:border-blue-500/30 transition-all"><span class="text-[10px] text-slate-600 font-black uppercase block mb-4">float()</span><span id="resFloat" class="text-white font-black text-2xl">123.4</span></div>
+                                    <div class="p-6 bg-black/50 rounded-3xl border border-slate-800 text-center shadow-lg group hover:border-emerald-500/30 transition-all"><span class="text-[10px] text-slate-600 font-black uppercase block mb-4">type()</span><span id="resStrType" class="text-emerald-400 font-black text-2xl uppercase tracking-widest">str</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 01: Basics (Extreme Detail) -->
+            <section id="basics" class="view-section p-6 md:p-16 space-y-12">
+                <div class="flex-1 space-y-12">
+                    <div id="casting-anchor"></div>
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic">Modül 01: Sayılar & <span class="text-blue-500 text-6xl italic underline decoration-blue-500/20 underline-offset-8">Dönüşüm</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black">Notebook 1a-b: Bellek Yönetimi ve Casting Mekanikleri.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-16 max-w-7xl">
+                        <!-- Arithmetic Depth -->
+                        <div id="arithmetic-anchor" class="glass-card p-12 space-y-12 border-l-8 border-l-blue-600 shadow-2xl relative overflow-hidden bg-blue-500/[0.01]">
+                            <div class="absolute top-4 right-4 text-slate-800 text-8xl opacity-5"><i class="fas fa-calculator"></i></div>
+                            <div class="flex justify-between items-start relative z-10">
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter flex items-center gap-6 italic border-b border-slate-900 pb-4">
+                                    <span class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-500 text-2xl font-black shadow-lg">1.1</span>
+                                    Sayısal Operatörler
+                                </h3>
+                                <span class="method-badge py-3 px-6 text-xs font-black shadow-xl">Primitive Types</span>
+                            </div>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 text-sm text-slate-400 leading-loose italic relative z-10">
+                                <div class="space-y-10 font-bold">
+                                    <p class="text-xl leading-relaxed text-slate-300 border-l-4 border-blue-500/20 pl-10 uppercase tracking-tighter">Python'da sayılar, sınırsız hassasiyete sahip bellek bloklarıdır. Tamsayı (int) ve Ondalık (float) ayrımı hayatidir.</p>
+                                    <div class="space-y-8 bg-slate-950 p-10 rounded-[3rem] border border-slate-900 shadow-2xl shadow-blue-500/5">
+                                        <h5 class="text-xs font-black text-blue-400 uppercase tracking-[0.4em] mb-6 border-b border-slate-800 pb-4 italic">Operatör Analizleri</h5>
+                                        <ul class="space-y-10 font-mono text-[14px]">
+                                            <li class="flex flex-col gap-3">
+                                                <div class="flex justify-between text-white font-black uppercase tracking-widest border-b border-slate-900/50 pb-2"><span>/ Division</span> <code class="text-blue-400">10 / 2 = 5.0</code></div>
+                                                <p class="text-[11px] text-slate-600 leading-relaxed font-black italic border-l-2 border-slate-800 pl-4 uppercase">"Normal bölme her zaman float döner. Veri kaybını önleyen evrensel bir dildir."</p>
+                                            </li>
+                                            <li class="flex flex-col gap-3">
+                                                <div class="flex justify-between text-white font-black uppercase tracking-widest border-b border-slate-900/50 pb-2"><span>// Floor Div</span> <code class="text-emerald-400">10 // 3 = 3</code></div>
+                                                <p class="text-[11px] text-slate-600 leading-relaxed font-black italic border-l-2 border-slate-800 pl-4 uppercase">"Ondalık kısmı çöpe atar. Basamak bulma ve tamsayı dizinleme işlemlerinde kritiktir."</p>
+                                            </li>
+                                            <li class="flex flex-col gap-3">
+                                                <div class="flex justify-between text-white font-black uppercase tracking-widest border-b border-slate-900/50 pb-2"><span>% Modulo</span> <code class="text-amber-400">17 % 5 = 2</code></div>
+                                                <p class="text-[11px] text-slate-600 leading-relaxed font-black italic border-l-2 border-slate-800 pl-4 uppercase">"Bölmeden kalanı verir. Döngüsel periyotlar ve tek-çift kontrolü için temeldir."</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="space-y-10">
+                                    <div class="code-snippet shadow-2xl border-l-4 border-l-blue-500 bg-slate-950 p-12 rounded-[3.5rem] italic">
+                                        <div class="code-block-header mb-8 border-b border-slate-900 pb-4 flex justify-between uppercase text-[11px] font-black tracking-widest text-slate-600 italic"><span>Casting Reference</span><span>TBP1001</span></div>
+                                        <span class="code-comment"># input() dize döner, tamsayıya zorla:</span><br>
+                                        <span class="code-kw">sayi</span> = <span class="code-fn">int</span>(<span class="code-fn">input</span>(<span class="code-str">"Giriş: "</span>)) <br><br>
+                                        <span class="code-comment"># Ondalık hassasiyet ekle (BKİ ödevinde kullandık)</span><br>
+                                        <span class="code-kw">oran</span> = <span class="code-fn">float</span>(<span class="code-kw">10.5</span>) <br><br>
+                                        <span class="code-comment"># Sayıyı metne çevir (Concatenation)</span><br>
+                                        <span class="code-kw">metin</span> = <span class="code-str">"Değer: "</span> + <span class="code-fn">str</span>(<span class="code-kw">oran</span>) <br><br>
+                                        <span class="code-comment"># Mutlak Değer (abs) - Şekil ödevinde kritik!</span><br>
+                                        <span class="code-kw">fark</span> = <span class="code-fn">abs</span>(kenar1 - kenar2)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 02: Strings (Extreme Depth) -->
+            <section id="strings" class="view-section p-6 md:p-16 space-y-12 pb-40">
+                <div class="flex-1 space-y-12">
+                    <div id="slice-anchor"></div>
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic">Modül 02: Karakter <span class="text-purple-500 text-6xl italic">Mekanikleri</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black underline decoration-purple-500/20 underline-offset-8">Notebook 1c: String Immutability ve Slicing Karar Yapıları.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-16 max-w-7xl">
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-purple-600 shadow-2xl relative overflow-hidden bg-purple-500/[0.01]">
+                            <div class="flex justify-between items-start relative z-10">
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter flex items-center gap-6 italic border-b border-purple-500/20 pb-4">String (str) Mimarisi</h3>
+                                <span class="method-badge bg-purple-500/20 text-purple-400 py-3 px-6 text-[11px] font-black tracking-widest border border-purple-500/30 shadow-xl">Read Only</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 text-sm text-slate-400 italic relative z-10">
+                                <div class="space-y-12 font-black uppercase tracking-tighter">
+                                    <p class="text-xl border-l-4 border-purple-500/30 pl-10 leading-relaxed text-slate-300 italic">
+                                        Python'da karakter dizileri **Değiştirilemez (Immutable)** yapılardır. Bir stringin tek bir karakterini s[0] = 'A' diyerek güncelleyemezsiniz. Bu, bellek optimizasyonu için bir zorunluluktur.
+                                    </p>
+                                    
+                                    <div class="space-y-10">
+                                        <h5 class="text-xs font-black text-white uppercase tracking-[0.4em] border-b border-slate-800 pb-5 flex items-center gap-4 italic underline decoration-purple-500/30 underline-offset-8 uppercase">Metod Arşivi</h5>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 font-mono text-[12px]">
+                                            <div class="p-8 bg-slate-950 rounded-3xl border border-slate-900 group hover:border-purple-500/50 transition-all shadow-2xl relative overflow-hidden">
+                                                <span class="text-purple-400 font-black block mb-4 text-sm uppercase tracking-tighter italic">.upper() / .lower()</span>
+                                                <p class="text-slate-500 leading-loose italic">Tüm karakterleri BÜYÜK veya küçük harfe çevirir. Bellekte **yeni bir kopya** üretir.</p>
+                                            </div>
+                                            <div class="p-8 bg-slate-950 rounded-3xl border border-slate-900 group hover:border-purple-500/50 transition-all shadow-2xl relative overflow-hidden">
+                                                <span class="text-purple-400 font-black block mb-4 text-sm uppercase tracking-tighter italic">.split(ayırıcı)</span>
+                                                <p class="text-slate-500 leading-loose italic">Metni parçalayıp **Liste** döner. Virgülle ayrılmış verileri okurken hayati önem taşır.</p>
+                                            </div>
+                                            <div class="p-8 bg-slate-950 rounded-3xl border border-slate-900 group hover:border-purple-500/50 transition-all shadow-2xl relative overflow-hidden">
+                                                <span class="text-purple-400 font-black block mb-4 text-sm uppercase tracking-tighter italic">.strip()</span>
+                                                <p class="text-slate-500 leading-loose italic">Metnin başındaki ve sonundaki tüm boşlukları veya (\n) karakterlerini temizler.</p>
+                                            </div>
+                                            <div class="p-8 bg-slate-950 rounded-3xl border border-slate-900 group hover:border-purple-500/50 transition-all shadow-2xl relative overflow-hidden">
+                                                <span class="text-purple-400 font-black block mb-4 text-sm uppercase tracking-tighter italic">.capitalize()</span>
+                                                <p class="text-slate-500 leading-loose italic">Sadece İLK harfi büyütür. Kullanıcı girdilerini normalize etmek için standarttır.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-12">
+                                    <div class="bg-black/80 p-12 rounded-[4rem] border border-slate-800 shadow-2xl relative group overflow-hidden border-t-purple-500/30">
+                                        <div class="absolute inset-0 bg-purple-500/[0.01] pointer-events-none"></div>
+                                        <h5 class="text-xs font-bold text-white uppercase tracking-[0.6em] mb-10 border-b border-slate-900 pb-6 flex justify-between items-center italic"><span>Slicing Protokolü</span><i class="fas fa-scissors text-slate-800 text-2xl"></i></h5>
+                                        <code class="block text-sm code-font text-purple-300 leading-loose mb-10 border-l-4 border-purple-500/50 pl-10 uppercase font-black">
+                                            s = <span class="code-str">"IKU_PYTHON"</span><br><br>
+                                            <span class="text-slate-600"># s[start : stop : step]</span><br>
+                                            print(s[0:3]) <span class="text-slate-600"># "IKU" (3 hariç)</span><br>
+                                            print(s[4:10]) <span class="text-slate-600"># "PYTHON"</span><br>
+                                            print(s[::-1]) <span class="text-slate-600"># Metni TERSE çevirir</span>
+                                        </code>
+                                        <div class="p-8 bg-slate-900/50 rounded-3xl border border-slate-800 text-[12px] text-slate-500 leading-relaxed font-black italic shadow-inner uppercase tracking-tighter">
+                                            Kural: Bitiş (stop) değeri indekse dahil edilmez. Bu, 'n-1' mantığıdır ve dizin tabanlı dillerde standarttır.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 03: Logic & NOT Explanation -->
+            <section id="logic" class="view-section p-6 md:p-16 space-y-12">
+                <div class="flex-1 space-y-12">
+                    <div id="bool-anchor"></div>
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic">Modül 03: Karar Yapıları & <span class="text-emerald-500 text-6xl italic uppercase underline decoration-emerald-500/20 underline-offset-8">Mantık</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black">Notebook 2a-d: Boolean Hiyerarşisi ve if-elif-else Zincirleri.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-7xl">
+                        <div class="glass-card p-12 space-y-12 border-t-8 border-t-emerald-600 shadow-2xl relative bg-emerald-500/[0.01]">
+                            <h3 class="text-3xl font-black text-white uppercase tracking-tighter italic border-b border-slate-800 pb-6">Mantıksal Operatörler</h3>
+                            <div class="space-y-12 italic font-black uppercase tracking-widest">
+                                <div class="flex items-start gap-10 group">
+                                    <span class="w-16 h-16 rounded-[1.5rem] bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black text-2xl group-hover:bg-emerald-500 transition-all group-hover:text-black shadow-2xl">AND</span>
+                                    <div class="flex-1"><strong class="text-white uppercase text-sm block mb-4 tracking-widest underline underline-offset-8 decoration-emerald-500/20 italic">ve bağlacı</strong><p class="text-xs text-slate-500 leading-loose italic">"Tüm koşulların True olması şarttır. İlk taraf False ise CPU gerisine bakmaz."</p></div>
+                                </div>
+                                <div class="flex items-start gap-10 group">
+                                    <span class="w-16 h-16 rounded-[1.5rem] bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black text-2xl group-hover:bg-emerald-500 transition-all group-hover:text-black shadow-2xl">OR</span>
+                                    <div class="flex-1"><strong class="text-white uppercase text-sm block mb-4 tracking-widest underline underline-offset-8 decoration-emerald-500/20 italic">veya bağlacı</strong><p class="text-xs text-slate-500 leading-loose italic">"Tek bir tarafın True olması yeterlidir. İlk True değerini bulduğunda CPU durur."</p></div>
+                                </div>
+                                <div class="flex items-start gap-10 group border-t border-slate-900 pt-8 shadow-inner">
+                                    <span class="w-16 h-16 rounded-[1.5rem] bg-rose-500/10 flex items-center justify-center text-rose-400 font-black text-2xl group-hover:bg-rose-500 transition-all group-hover:text-black shadow-2xl">NOT</span>
+                                    <div class="flex-1"><strong class="text-white uppercase text-sm block mb-4 tracking-widest underline underline-offset-8 decoration-rose-500/20 italic">değil operatörü</strong><p class="text-xs text-slate-500 leading-loose italic">"Mevcut Boolean değerini tersine çevirir. `not True -> False`, `not False -> True`. Olumsuz kontrollerde (örn: `if not bitis:`) temeldir."</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-12 space-y-12 border-t-8 border-t-blue-600 bg-blue-500/[0.01] shadow-2xl">
+                            <h3 class="text-3xl font-black text-white uppercase tracking-tighter italic border-b border-slate-800 pb-6 text-right">elif Mekanizması</h3>
+                            <div class="code-snippet text-[14px] leading-loose italic shadow-2xl border-blue-500/20 bg-slate-950 p-10 rounded-[3rem] font-black uppercase tracking-tighter">
+                                <span class="code-kw">if</span> ortalama < <span class="code-kw">50</span>:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">print</span>(<span class="code-str">"Kaldı"</span>)<br><br>
+                                <span class="code-kw">elif</span> ortalama < <span class="code-kw">85</span>:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">print</span>(<span class="code-str">"Geçti"</span>)<br><br>
+                                <span class="code-kw">else</span>:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">print</span>(<span class="code-str">"Takdir!"</span>)
+                            </div>
+                            <div class="p-8 bg-slate-900/50 rounded-3xl border border-slate-800 italic text-[12px] text-slate-500 leading-relaxed font-black uppercase tracking-tighter">
+                                IKU Bilgi: Python'da 'else if' yerine 'elif' kullanılır. Bu, kodun hem daha okunaklı olmasını sağlar hem de çoklu koşul bloklarını hızlandırır.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 04: Loops -->
+            <section id="loops" class="view-section p-6 md:p-16 space-y-12 pb-40">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic">Modül 04: <span class="text-amber-500 text-6xl underline decoration-amber-500/20 underline-offset-8">Döngü</span> Yapıları.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black">Notebook 3a-f: for, while, range ve Liste Sıkıştırma (Comprehension).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-16 max-w-7xl pb-32">
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-amber-600 shadow-2xl relative bg-amber-500/[0.01]">
+                            <h3 class="text-4xl font-black text-white uppercase tracking-tighter italic border-b border-slate-800 pb-6">İterasyon Sistemleri</h3>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 italic font-black uppercase tracking-tighter">
+                                <div class="p-10 bg-slate-950 rounded-[3rem] border border-slate-900 space-y-8 shadow-2xl relative group">
+                                    <h5 class="text-[14px] font-black text-amber-500 uppercase tracking-widest border-b border-slate-900 pb-4 italic flex justify-between"><span>For Loop (Dizi İteratörü)</span><i class="fas fa-repeat"></i></h5>
+                                    <p class="text-sm text-slate-400 leading-loose">Koleksiyon elemanları (List, Tuple, String) üzerinde tek tek gezmek için standarttır. Bitiş her zaman bellidir.</p>
+                                    <code class="block text-xs code-font text-amber-300 bg-black p-6 rounded-2xl border-l-4 border-amber-600">
+                                        <span class="code-kw">for</span> harf <span class="code-kw">in</span> <span class="code-str">"Python"</span>:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">print</span>(harf) <span class="text-slate-700"># P-y-t-h-o-n</span>
+                                    </code>
+                                </div>
+                                <div class="p-10 bg-slate-950 rounded-[3rem] border border-slate-900 space-y-8 shadow-2xl relative group">
+                                    <h5 class="text-[14px] font-black text-amber-500 uppercase tracking-widest border-b border-slate-900 pb-4 italic flex justify-between"><span>While Loop (Mantıksal İteratör)</span><i class="fas fa-hourglass-half"></i></h5>
+                                    <p class="text-sm text-slate-400 leading-loose">Boolean koşul True olduğu sürece çalışır. Sayaç güncellenmezse Infinite Loop hatası oluşur.</p>
+                                    <code class="block text-xs code-font text-amber-300 bg-black p-6 rounded-2xl border-l-4 border-amber-600">
+                                        i = <span class="code-kw">0</span><br>
+                                        <span class="code-kw">while</span> i < <span class="code-kw">5</span>:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;i += <span class="code-kw">1</span> <span class="text-slate-700"># Sayaç</span>
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 05: Collections (Extreme Hiearchy) -->
+            <section id="collections" class="view-section p-6 md:p-16 space-y-12 pb-40">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic">Modül 05: Koleksiyon <span class="text-blue-500 text-6xl italic uppercase underline decoration-blue-500/20 underline-offset-8">Mimarisi</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black">Notebook 1f-h: Listeler, Demetler, Sözlükler ve Set Detayları.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-7xl pb-32">
+                        <!-- Detailed Lists -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-blue-600 shadow-2xl relative bg-blue-500/[0.01]">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter italic">Listeler [ ]</h3>
+                                <span class="method-badge bg-blue-500/20 text-blue-400 py-3 px-6 text-[10px] font-black tracking-widest shadow-xl">Mutable Core</span>
+                            </div>
+                            <div class="space-y-12 italic font-black uppercase tracking-tighter">
+                                <p class="text-lg text-slate-300 leading-relaxed border-l-4 border-blue-500/20 pl-10">Sıralı, değiştirilebilir ve dinamik yapılar. İKÜ projelerimizin %80'i listeler üzerine kuruludur.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-[11px] font-black italic">
+                                    <div class="p-10 bg-slate-950 rounded-3xl border border-slate-900 group hover:border-blue-500/40 transition-all shadow-2xl space-y-6">
+                                        <h5 class="text-[11px] font-black text-blue-400 uppercase tracking-widest border-b border-slate-800 pb-3 italic uppercase">Metodlar</h5>
+                                        <ul class="space-y-6">
+                                            <li class="flex justify-between border-b border-slate-900/50 pb-2"><span>.append(x)</span> <span class="text-slate-600 text-[10px] uppercase font-black tracking-widest">Sona Ekle</span></li>
+                                            <li class="flex justify-between border-b border-slate-900/50 pb-2"><span>.pop(i)</span> <span class="text-slate-600 text-[10px] uppercase font-black tracking-widest">Sil & Dön</span></li>
+                                            <li class="flex justify-between border-b border-slate-900/50 pb-2"><span>.sort()</span> <span class="text-slate-600 text-[10px] uppercase font-black tracking-widest">Sırala</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-10 bg-slate-950 rounded-3xl border border-slate-800 group hover:border-blue-500/40 transition-all shadow-2xl space-y-6 uppercase tracking-tighter">
+                                        <h5 class="text-[11px] font-black text-blue-400 uppercase tracking-widest border-b border-slate-800 pb-3 italic">Bellek Trick</h5>
+                                        <p class="text-[11px] text-slate-500 leading-relaxed italic">
+                                            "Hocam, `a=b` yazarsak bellek adresleri aynı olur. Değişiklik iki tarafa da yansır (Referans Atama). Kopya için `.copy()` şarttır."
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Demet & Sözlük -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-amber-600 shadow-2xl relative bg-amber-500/[0.01]">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter italic border-b border-amber-500/20 pb-4">Demet & Sözlük</h3>
+                            </div>
+                            <div class="space-y-16 italic font-black uppercase tracking-tighter">
+                                <div class="space-y-8">
+                                    <h5 class="text-sm font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 border-b border-slate-900 pb-4 italic"><i class="fas fa-lock text-purple-500"></i> Deste (Tuple) ( )</h5>
+                                    <p class="text-sm text-slate-500 leading-relaxed italic border-l-4 border-purple-500/20 pl-10 uppercase">Değiştirilemezler. Listelerden daha hızlıdır. 'Salt Okunur' verileri korumak için tasarlanmıştır.</p>
+                                    <code class="block text-[12px] code-font text-purple-300 bg-black/60 p-6 rounded-3xl border border-slate-800 shadow-2xl uppercase font-black italic">a, b = (10, 20) <span class="text-slate-600 italic"># Unpacking</span></code>
+                                </div>
+                                <div class="space-y-8">
+                                    <h5 class="text-sm font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 border-b border-slate-900 pb-4 italic"><i class="fas fa-key text-amber-500"></i> Sözlük (Dict) { }</h5>
+                                    <p class="text-sm text-slate-500 leading-relaxed italic border-l-4 border-amber-500/20 pl-10 uppercase font-black">Anahtar-Değer (Key-Value) eşleşmesiyle çalışır. İndeks yoktur. O(1) hızında veri arama yapar.</p>
+                                    <div class="grid grid-cols-2 gap-6 font-mono text-[10px] italic uppercase font-black">
+                                        <div class="p-6 bg-slate-950 rounded-3xl border border-slate-800 shadow-2xl">.keys(): Sadece anahtarlar</div>
+                                        <div class="p-6 bg-slate-950 rounded-3xl border border-slate-800 shadow-2xl">.items(): Tüm çiftler</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 06: Functions -->
+            <section id="advanced" class="view-section p-6 md:p-16 space-y-12 pb-40">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic uppercase">Fonksiyon & <span class="text-blue-400 text-6xl italic underline decoration-blue-500/20 underline-offset-8">Lambda</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black">Notebook 4a-f: Parametre Hiyerarşisi, Scope ve Fonksiyonel Tasarım.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-7xl pb-40">
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-blue-600 shadow-2xl relative bg-blue-500/[0.01]">
+                            <h3 class="text-4xl font-black text-white uppercase tracking-tighter flex items-center gap-6 italic border-b border-slate-800 pb-6 uppercase italic">Fonksiyon (def) Mantığı <i class="fas fa-laptop-code text-blue-900"></i></h3>
+                            <div class="space-y-10 italic font-black uppercase tracking-tighter">
+                                <p class="text-lg text-slate-300 leading-relaxed italic border-l-4 border-blue-500/20 pl-10 uppercase tracking-tighter">Kod tekrarını engelleyen modüler tasarımlar.</p>
+                                <div class="bg-slate-950 p-10 rounded-[3.5rem] border border-slate-900 shadow-2xl space-y-10 uppercase">
+                                    <div class="flex flex-col gap-4">
+                                        <strong class="text-white uppercase tracking-widest block underline decoration-blue-500/20 underline-offset-8 italic">Local (Yerel) Scope</strong>
+                                        <p class="text-xs text-slate-500 leading-loose italic">Fonksiyon içinde tanımlanan değişken orada doğar, fonksiyon bitince silinir. Dışarıdan erişilemez.</p>
+                                    </div>
+                                    <div class="flex flex-col gap-4 italic shadow-inner">
+                                        <strong class="text-white uppercase tracking-widest block underline decoration-blue-500/20 underline-offset-8 italic">Global Scope</strong>
+                                        <p class="text-xs text-slate-500 leading-loose italic">Programın başında tanımlanır. İçeriden güncellemek için <code class="text-blue-400 font-black">global x</code> anahtarı şarttır.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-10">
+                            <div class="code-snippet shadow-2xl border-l-4 border-l-blue-500 bg-slate-950 p-12 rounded-[3.5rem] italic uppercase font-black">
+                                <div class="code-block-header mb-8 border-b border-slate-900 pb-4 flex justify-between uppercase text-[11px] font-black tracking-widest text-slate-600 italic"><span>IKU BIL101 Reference</span><span>Python</span></div>
+                                <span class="code-kw">def</span> <span class="code-fn">selamla</span>(isim=<span class="code-str">"Anonim"</span>):<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-kw">return</span> <span class="code-str">"Merhaba "</span> + isim<br><br>
+                                <span class="code-comment"># Lambda (Pratik Fonksiyon)</span><br>iki_kati = <span class="code-kw">lambda</span> x : x * <span class="code-kw">2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Module 07: Modules -->
+            <section id="modules" class="view-section p-6 md:p-16 space-y-12 pb-40">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-5xl font-black uppercase text-white tracking-tighter leading-tight italic uppercase">Modüller & <span class="text-amber-500 text-6xl underline decoration-amber-500/20 underline-offset-8 uppercase">math</span>.</h2>
+                            <p class="text-slate-500 mt-4 text-xl font-medium italic leading-relaxed uppercase tracking-tighter font-black underline decoration-amber-500/10 underline-offset-8">Notebook 5a-c: Kodları Parçalamak ve Hazır Kütüphane Kullanımı.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-7xl pb-40">
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-amber-600 shadow-2xl relative bg-amber-500/[0.01]">
+                            <h3 class="text-4xl font-black text-white uppercase tracking-tighter italic border-b border-slate-800 pb-6 uppercase">İçe Aktarma</h3>
+                            <div class="space-y-12 italic font-black uppercase tracking-tighter">
+                                <div class="p-10 bg-slate-950 rounded-[3rem] border border-slate-900 shadow-xl group hover:border-amber-500/40 transition-all uppercase tracking-tighter">
+                                    <strong class="text-white block mb-6 text-xs underline decoration-amber-500/20 underline-offset-8 uppercase">1. import modül_adi</strong>
+                                    <p class="mb-8 text-slate-500 text-sm leading-loose uppercase italic font-black">İsim çakışmasını önleyen en güvenli yoldur. `math.sqrt()` şeklinde kullanılır.</p>
+                                    <code class="block bg-black p-6 rounded-2xl text-amber-300 text-xs italic font-black shadow-inner uppercase"><span class="code-kw">import</span> math<br>math.<span class="code-fn">sqrt</span>(<span class="code-kw">25</span>) <span class="text-slate-700"># 5.0</span></code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-emerald-600 shadow-2xl bg-emerald-500/[0.01]">
+                            <h3 class="text-4xl font-black text-white uppercase tracking-tighter italic border-b border-slate-800 pb-6 text-right uppercase">Standard Math</h3>
+                            <div class="space-y-12 bg-black/60 p-12 rounded-[4rem] border border-slate-800 shadow-2xl uppercase tracking-tighter font-black italic">
+                                <ul class="space-y-10 text-[14px] text-slate-400">
+                                    <li class="flex justify-between items-center border-b border-slate-900/50 pb-4"><span>math.ceil(3.1)</span> <span class="text-emerald-400 font-black tracking-widest underline underline-offset-4 decoration-emerald-500/20">-> 4 (Üste)</span></li>
+                                    <li class="flex justify-between items-center border-b border-slate-900/50 pb-4"><span>math.floor(3.9)</span> <span class="text-emerald-400 font-black tracking-widest underline underline-offset-4 decoration-emerald-500/20">-> 3 (Alta)</span></li>
+                                    <li class="flex justify-between items-center border-b border-slate-900/50 pb-4"><span>math.factorial(5)</span> <span class="text-emerald-400 font-black tracking-widest underline underline-offset-4 decoration-emerald-500/20">-> 120</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- View: Homework Analysis -->
+            <section id="homework" class="view-section p-6 md:p-16 space-y-12 pb-64">
+                <div class="flex-1 space-y-12">
+                    <div class="border-b border-slate-800 pb-16 flex flex-col gap-8">
+                        <h2 class="text-6xl font-black uppercase text-emerald-500 tracking-tighter leading-tight italic uppercase">Kod Analiz <br> <span class="text-white">Arşivi.</span></h2>
+                        <p class="text-slate-500 text-lg md:text-2xl italic max-w-5xl leading-relaxed border-l-4 border-emerald-500/20 pl-12 font-black uppercase tracking-widest italic">Ödevlerin satır satır teknik dökümü ve hoca sorguları için hazır analizler.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-7xl pb-40 uppercase font-black italic tracking-tighter">
+                        <!-- BMI -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-blue-600 shadow-2xl relative group overflow-hidden bg-blue-500/[0.01]">
+                            <h4 class="font-black text-white text-3xl uppercase tracking-tighter italic border-b border-slate-900 pb-6 uppercase italic">01. Beden Kitle İndeksi</h4>
+                            <div class="space-y-10 relative z-10">
+                                <div class="homework-step space-y-6">
+                                    <h5 class="text-[12px] font-black text-blue-400 uppercase tracking-[0.3em] italic underline decoration-blue-500/20 underline-offset-8 mb-4">Şu kod ne işe yaradı?</h5>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">float(input())</strong> : Boy verisini 1.75 gibi ondalıklı okumak için şarttır. int() kullanılsaydı Python 1.75'i 1 olarak görür ve matematiksel hata oluşurdu.</p>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">if-elif-else</strong> : Bir insan aynı anda hem zayıf hem kilolu olamaz. Doğru aralığı bulunca 'elif' sayesinde CPU aramayı durdurur ve performansı maksimize eder.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Armstrong -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-rose-600 shadow-2xl relative group overflow-hidden bg-rose-500/[0.01]">
+                            <h4 class="font-black text-white text-3xl uppercase tracking-tighter italic border-b border-slate-900 pb-6 uppercase italic">02. Armstrong Sayıları</h4>
+                            <div class="space-y-10 relative z-10">
+                                <div class="homework-step space-y-6">
+                                    <h5 class="text-[12px] font-black text-rose-400 uppercase tracking-[0.3em] italic underline decoration-rose-500/20 underline-offset-8 mb-4">Şu kod ne işe yaradı?</h5>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">str(sayi)</strong> : Python'da tam sayılar üzerinde döngü kurulamaz. Sayıyı metne çevirerek her bir rakamı bağımsız bir karakter gibi yakalayıp for döngüsü ile dönmemizi sağladı.</p>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">len()</strong> : Basamak sayısını dinamik bulup kuvvet (üst) değeri olarak kullandık. Bu sayede kodumuz hem 3 hem 4 basamaklı Armstrong sayılarını çözebilir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shape -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-amber-600 shadow-2xl relative group overflow-hidden bg-amber-500/[0.01]">
+                            <h4 class="font-black text-white text-3xl uppercase tracking-tighter italic border-b border-slate-900 pb-6 uppercase italic">03. Şekil Tespiti & abs()</h4>
+                            <div class="space-y-10 relative z-10">
+                                <div class="homework-step space-y-6">
+                                    <h5 class="text-[12px] font-black text-amber-400 uppercase tracking-[0.3em] italic underline decoration-amber-500/20 underline-offset-8 mb-4">Şu kod ne işe yaradı?</h5>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">abs()</strong> : Geometride uzunluk negatif olamaz. Kenar farklarının mutlak değerini alarak (a-b) sonucunun her zaman pozitif kalmasını ve algoritmanın doğru karar vermesini sağladık.</p>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">.capitalize()</strong> : Kullanıcının 'uCgen' veya 'UCGEN' yazma hatalarını normalize edip sorguların hatasız çalışmasını garanti ettik.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Perfect Number -->
+                        <div class="glass-card p-12 space-y-12 border-l-8 border-l-emerald-600 shadow-2xl relative group overflow-hidden bg-emerald-500/[0.01]">
+                            <h4 class="font-black text-white text-3xl uppercase tracking-tighter italic border-b border-slate-900 pb-6 uppercase italic">04. Mükemmel Sayılar</h4>
+                            <div class="space-y-10 relative z-10">
+                                <div class="homework-step space-y-6">
+                                    <h5 class="text-[12px] font-black text-emerald-400 uppercase tracking-[0.3em] italic underline decoration-emerald-500/20 underline-offset-8 mb-4">Şu kod ne işe yaradı?</h5>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">range(1, sayi)</strong> : Sayının kendisi hariç 1'den kendisine kadar olan tüm sayıları taramamızı sağladı. CPU döngü başına her böleni tek tek denetledi.</p>
+                                    <p class="text-[14px] text-slate-400 leading-loose border-l-2 border-slate-800 pl-6"><strong class="text-white">toplam += i</strong> : Accumulator (biriktirme) mantığıdır. Sadece tam bölünen çarpanları bir kumbarada topladık ve en son sayıya eşit mi diye denetledik.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- View: Arena -->
+            <section id="arena" class="view-section p-6 md:p-16 space-y-12">
+                <div class="flex-1 space-y-12">
+                    <div class="text-center space-y-10 max-w-5xl mx-auto">
+                        <h2 class="text-7xl md:text-9xl font-black uppercase text-blue-600 tracking-tighter leading-none italic uppercase underline decoration-blue-600/10 underline-offset-[20px]">TRICK <br> <span class="text-white">ARENA.</span></h2>
+                        <p class="text-slate-500 italic font-black text-lg leading-relaxed border-y border-slate-900 py-12 uppercase tracking-[0.2em]">TBP1001 quizi için 50 adet analitik Case ve çözüm dökümü. <br> Kartlara tıklayarak cevabı açın.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-7xl mx-auto pb-40 italic font-black uppercase tracking-tighter" id="quizGrid"></div>
+                </div>
+                <footer class="mt-auto py-12 text-center border-t border-slate-900 bg-slate-950/80 backdrop-blur-md">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-python text-xl text-blue-500"></i>
+                            <span class="text-xs font-black tracking-[0.4em] text-white uppercase italic">halitguns06.dev | İKÜ TBP1001</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </div>
+    </main>
+
+    <!-- Overlay -->
+    <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[4000] hidden md:hidden"></div>
+
+    <script>
+        const state = { view: 'dashboard', sidebarOpen: false };
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            const targetView = document.getElementById(pageId);
+            if(targetView) targetView.classList.add('active');
+
+            document.querySelectorAll('.nav-link').forEach(l => {
+                l.classList.remove('active');
+                l.classList.add('text-slate-400');
+                if(l.dataset.id === pageId) {
+                    l.classList.add('active');
+                    l.classList.remove('text-slate-400');
+                }
+            });
+
+            const mainScroll = document.getElementById('main-content');
+            if(mainScroll) mainScroll.scrollTop = 0;
+            state.view = pageId;
+
+            if (state.sidebarOpen) toggleSidebar();
+            if(pageId === 'dashboard') initRadar();
+        }
+
+function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('mobile-overlay');
+    const icon = document.getElementById('menu-icon');
+    
+    state.sidebarOpen = !state.sidebarOpen;
+    
+    if (state.sidebarOpen) {
+        sb.classList.add('open');
+        ov.classList.remove('hidden');
+        icon.classList.replace('fa-bars', 'fa-times');
+        document.body.style.overflow = 'hidden'; // Arka plan kaymasını durdur
+    } else {
+        sb.classList.remove('open');
+        ov.classList.add('hidden');
+        icon.classList.replace('fa-times', 'fa-bars');
+        document.body.style.overflow = ''; // Kaymayı geri aç
+    }
+}
+// Menü linklerine tıklandığında kapanması için switchPage fonksiyonuna ek:
+function switchPage(pageId) {
+    // 1. Tüm sayfaları gizle ve hedef sayfayı göster
+    document.querySelectorAll('.view-section').forEach(v => {
+        v.classList.remove('active');
+        v.style.display = 'none'; // Ek güvenlik
+    });
+    
+    const targetView = document.getElementById(pageId);
+    if(targetView) {
+        targetView.classList.add('active');
+        targetView.style.display = 'flex';
+    }
+
+    // 2. Navigasyon butonlarının renklerini güncelle
+    document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.remove('active', 'text-blue-500');
+        l.classList.add('text-slate-400');
+        if(l.dataset.id === pageId) {
+            l.classList.add('active');
+            l.classList.remove('text-slate-400');
+        }
+    });
+
+    // 3. Mobildeysen menüyü kapat, PC'deysen dokunma
+    if (window.innerWidth <= 768 && state.sidebarOpen) {
+        toggleSidebar();
+    }
+
+    // Sayfayı yukarı kaydır
+    const mainContent = document.getElementById('main-content');
+    if(mainContent) mainContent.scrollTop = 0;
+}
+
+        function jumpToSection(pageId, elementId) {
+            switchPage(pageId);
+            setTimeout(() => {
+                const el = document.getElementById(elementId);
+                if(el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 400);
+        }
+
+        function runMathLab() {
+            const a_el = document.getElementById('mathA'), b_el = document.getElementById('mathB');
+            const rf = document.getElementById('resFloor'), rm = document.getElementById('resMod');
+            if(!a_el || !b_el || !rf || !rm) return;
+            const a = parseFloat(a_el.value) || 0, b = parseFloat(b_el.value) || 1;
+            rf.innerText = Math.floor(a / b); rm.innerText = (a % b);
+        }
+
+        function runSliceLab() {
+            const s_el = document.getElementById('slStart'), e_el = document.getElementById('slStop'), st_el = document.getElementById('slStep');
+            const out = document.getElementById('slOutput'), cd = document.getElementById('slCode');
+            if(!s_el || !e_el || !st_el || !out || !cd) return;
+            const s = parseInt(s_el.value) || 0, e = parseInt(e_el.value) || 6, st = parseInt(st_el.value) || 1;
+            const text = "PYTHON"; let res = ""; const step = st === 0 ? 1 : st;
+            if (step > 0) { for(let i = s; i < e; i += step) { if(i < text.length && i >= 0) res += text[i]; } }
+            else { for(let i = s; i > e; i += step) { if(i < text.length && i >= 0) res += text[i]; } }
+            out.innerText = `"${res}"`; cd.innerText = `s[${s}:${e}:${st}]`;
+        }
+
+        function runLogicLab() {
+            const a_el = document.getElementById('logicA'), b_el = document.getElementById('logicB'), op_el = document.getElementById('logicOp');
+            const el = document.getElementById('logicRes');
+            if(!a_el || !b_el || !op_el || !el) return;
+            const a = parseFloat(a_el.value) || 0, b = parseFloat(b_el.value) || 0, op = op_el.value;
+            let res = false;
+            switch(op) {
+                case '==': res = a == b; break; case '!=': res = a != b; break; case '>': res = a > b; break;
+                case '<': res = a < b; break; case '>=': res = a >= b; break; case '<=': res = a <= b; break;
+            }
+            el.innerText = res ? 'TRUE' : 'FALSE';
+            el.className = `text-6xl font-black px-16 py-8 rounded-[2.5rem] border min-w-[220px] text-center ${res ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'} transition-all duration-500 uppercase tracking-tighter shadow-2xl`;
+        }
+
+        function runCastingLab() {
+            const i_el = document.getElementById('castIn');
+            const ri = document.getElementById('resInt'), rf = document.getElementById('resFloat'), rs = document.getElementById('resStrType');
+            if(!i_el || !ri || !rf || !rs) return;
+            const val = i_el.value;
+            ri.innerText = isNaN(parseInt(val)) ? 'Err' : parseInt(val);
+            rf.innerText = isNaN(parseFloat(val)) ? 'Err' : parseFloat(val).toFixed(1);
+            rs.innerText = "str";
+        }
+
+        let myChart = null;
+        function initRadar() {
+            const ctx = document.getElementById('mainRadarChart');
+            if(!ctx) return; if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'radar', data: {
+                    labels: ['Numbers', 'Strings', 'Logic', 'Loops', 'Collections', 'Functions'],
+                    datasets: [{
+                        label: 'Müfredat Kapsamı (%)', data: [100, 95, 100, 100, 90, 85],
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)', borderColor: '#38bdf8', borderWidth: 8,
+                        pointRadius: 10, pointBackgroundColor: '#38bdf8', pointBorderColor: '#0f172a', pointBorderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            min: 0, max: 100, ticks: { display: false, stepSize: 25 },
+                            grid: { color: 'rgba(30, 41, 59, 0.6)' }, angleLines: { color: 'rgba(30, 41, 59, 0.6)' },
+                            pointLabels: { color: '#94a3b8', font: { size: 11, weight: '900', family: 'Inter' } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        const tricks = [
+            { q: "10 / 2 işlemi neden float (5.0) döner?", a: "Python 3'te / operatörü her zaman float sonuç üretir. Tam sayı sonucu için // (floor division) gereklidir." },
+            { q: "input() içine sayı girilse bile tipi neden string olur?", a: "input() fonksiyonu terminalden gelen ham veriyi karakter dizisi olarak yakalar. int() dönüşümü şarttır." },
+            { q: "bool(0.0) sonucu nedir?", a: "False. Sayısal olarak tam sıfıra eşit olan her değer Falsy kabul edilir." },
+            { q: "s = 'PYTHON'; s[0] = 'J' hata verir mi?", a: "Evet. Stringler Immutable'dır (değiştirilemez). Bellekteki adresleri sabit olduğu için karakter bazlı atama yapılamaz." },
+            { q: "x = (5 > 3) or (2 > 10) işleminde Python 2. paranteze bakar mı?", a: "Hayır. or bağlacında ilk değer True ise sonuç bellidir. Buna 'Short-circuit' mantığı denir." },
+            { q: "range(1, 5) hangi sayıları verir?", a: "1, 2, 3, 4. Bitiş değeri (stop) dizeye asla dahil edilmez." },
+            { q: "list.pop() metodunun ana farkı nedir?", a: "Sadece silmekle kalmaz, sildiği son elemanı size 'değer' olarak geri döndürür." },
+            { q: "Sözlüklerde (Dict) neden indeks yoktur?", a: "Sözlükler sıralı yapılar değildir; anahtarlar (keys) üzerinden bellek adreslerine (Hashing) ulaşılır." },
+            { q: "int('5.5') neden ValueError hatası verir?", a: "Noktalı bir metin doğrudan tamsayıya çevrilemez. Önce float() sonra int() yapılmalıdır." },
+            { q: "a, b = b, a işlemi arka planda nasıl çalışır?", a: "Tuple unpacking yöntemiyle. Sağ taraf gizli bir demet olarak paketlenip sola dağıtılır." },
+            { q: "x = [1,2]; y = x; y.append(3); print(x) ne basar?", a: "[1,2,3]. Listeler referans tiptir, y = x yazınca ikisi aynı bellek kutusunu gösterir." },
+            { q: "is operatörü ile == farkı nedir?", a: "== değerlerin aynılığına, is operatörü ise bellekteki adreslerin (Identity) aynılığına bakar." },
+            { q: "for x in [(1,2)] döngüsünde x değişkeninin tipi nedir?", a: "Demet (Tuple). Karşılıklı atama yöntemiyle elemanlar tek tek de alınabilir: for a,b in [(1,2)]." },
+            { q: "list.sort() return değeri nedir?", a: "None döner. Çünkü listeyi yerinde (in-place) günceller, yeni bir liste üretmez." },
+            { q: "2 ** 3 ** 2 işleminin sonucu neden 512 çıkar?", a: "Python'da üs alma işlemi sağdan sola doğru (right-associative) çalışır: 2^(3^2) -> 2^9." },
+            { q: "math.ceil(2.1) ve math.floor(2.9) ne döner?", a: "ceil() -> 3, floor() -> 2." },
+            { q: "dir() fonksiyonu ne işe yarar?", a: "Bir objenin veya modülün sahip olduğu tüm metod ve özellikleri listelemek için kullanılır." },
+            { q: "global anahtar kelimesi ne zaman zorunludur?", a: "Fonksiyon içinden dışarıdaki bir değişkeni GÜNCELLEMEK istediğimizde." },
+            { q: "len('iku ') sonucu kaçtır?", a: "4. Boşluk (space) karakteri de bellekte yer kaplayan bir karakterdir." },
+            { q: "round(3.5) sonucu neden 4 çıkar?", a: "Python en yakın çift sayıya yuvarlama (Banker's rounding) kuralını izler." },
+            { q: "continue ifadesi döngüde ne sağlar?", a: "Mevcut turun geri kalanını pas geçer ve anında bir sonraki turun başına döner." },
+            { q: "list.insert(0, 'A') ne yapar?", a: "Listenin en başına 'A' elemanını ekler, sağdaki her şeyi 1 basamak kaydırır." },
+            { q: "set([1,1,2]) sonucu nedir?", a: "{1, 2}. Kümeler sadece benzersiz (unique) elemanları barındırır." },
+            { q: "print(*'IKU') çıktısı nedir?", a: "I K U. Karakter dizisini açarak (unpacking) araya boşlukla yazar." },
+            { q: "lambda fonksiyonu nedir?", a: "Tek satırlık, isimsiz ve genellikle bir kerelik kullanılacak pratik fonksiyonlardır." },
+            { q: "Sözlükte .get('x') neden s['x'] yerine tercih edilir?", a: "Eğer 'x' anahtarı yoksa KeyError vermek yerine None döndürür." },
+            { q: "not not True sonucu nedir?", a: "True. Çift olumsuzluk birbirini götürür." },
+            { q: "range(10, 0, -1) hangi sayıları verir?", a: "10, 9, 8, ... , 1. (0 hariçtir)." },
+            { q: "None veri tipi mantıksal olarak ne sayılır?", a: "False kabul edilir (Falsy value)." },
+            { q: "enumerate() döngülerde neyi kolaylaştırır?", a: "Elemanla birlikte o elemanın indeksini de (index, value) ikilisi olarak almayı sağlar." },
+            { q: "zip(list1, list2) ne üretir?", a: "İki listenin elemanlarını karşılıklı eşleşmiş demet (tuple) çiftleri haline getirir." },
+            { q: "dict.items() ne döndürür?", a: "Anahtar ve değerleri demet çiftleri halinde içeren bir liste benzeri yapı döner." },
+            { q: "list.extend([1,2]) ve .append([1,2]) farkı?", a: "extend elemanları tek tek ekler, append listeyi olduğu gibi tek bir eleman olarak ekler." },
+            { q: "Stringlerde .strip() ne yapar?", a: "Metnin başındaki ve sonundaki tüm boşluk, tab ve satır atlamalarını temizler." },
+            { q: "pow(2, 4) sonucu nedir?", a: "16. 2'nin 4. kuvvetini hesaplar." },
+            { q: "abs(-42) ne yapar?", a: "Mutlak değer alır, sonuç 42." },
+            { q: "int('10', 2) ne üretir?", a: "İkilik tabandaki (binary) '10' metnini onluk tam sayıya çevirir: 2." },
+            { q: "math.factorial(0) kaçtır?", a: "1'dir. Faktöriyel kuralına uygun çalışır." },
+            { q: "IndentationError ne zaman olur?", a: "Python'ın girinti kurallarına (genelde 4 boşluk) uyulmadığında blok yapısı bozulursa." },
+            { q: "Tuple neden Immutable (sabit) yapılmıştır?", a: "Veri güvenliği sağlamak ve bellekte daha hızlı arama yapabilmek için." },
+            { q: "bool([]) sonucu neden False'dur?", a: "Boş koleksiyonlar (liste, demet, sözlük) Python'da mantıksal olarak False döner." },
+            { q: "isinstance(5, int) ne döner?", a: "True. Verinin tipini sorgulamanın en güvenli yoludur." },
+            { q: "x = 5; x += 1 ne yapar?", a: "x = x + 1'in kısaltmasıdır, sonuç 6." },
+            { q: "math.gcd(12, 18) sonucu nedir?", a: "6. En Büyük Ortak Bölen (EBOB) hesaplar." },
+            { q: "complex(1, 2) nedir?", a: "1 + 2j karmaşık sayısını temsil eden özel bir veri tipidir." },
+            { q: "Stringlerde .find('x') yoksa ne döner?", a: "-1. Hata vermek yerine negatif sonuç döner." },
+            { q: "list.clear() ne yapar?", a: "Listenin tüm içeriğini siler ama listeyi yok etmez (Boş liste bırakır)." },
+            { q: "sorted(list) orijinali değiştirir mi?", a: "Hayır. Orijinale dokunmaz, sıralanmış YENİ bir liste döndürür." },
+            { q: "lambda x: x*x tipi nedir?", a: "<class 'function'>" },
+            { q: "Guido van Rossum kimdir?", a: "Python dilinin yaratıcısı olan Hollandalı yazılımcıdır." }
+        ];
+
+        function renderTricks() {
+            const grid = document.getElementById('quizGrid'); if (!grid) return;
+            tricks.forEach((t, i) => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-10 quiz-item cursor-pointer group hover:border-blue-500/50 transition-all h-fit shadow-2xl active:scale-[0.98]";
+                card.onclick = () => card.classList.toggle('open');
+                card.innerHTML = `<div class="flex justify-between items-center gap-6"><div class="flex gap-5 items-center"><span class="text-[11px] font-black text-blue-500 bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20 uppercase tracking-tighter shadow-lg italic">Case ${i+1}</span><p class="text-md font-bold text-slate-200 leading-snug group-hover:text-white uppercase tracking-tight">${t.q}</p></div><i class="fas fa-chevron-down text-sm text-slate-600 transition-transform duration-500"></i></div><div class="answer-panel"><div class="p-8 bg-slate-950/80 rounded-[2rem] border border-slate-800 text-sm text-blue-300 leading-relaxed font-medium italic relative overflow-hidden shadow-inner"><span class="text-emerald-400 font-black uppercase text-[10px] block mb-4 underline decoration-emerald-500/30 tracking-[0.2em] italic font-black">Cevap & Mantık:</span>${t.a}<div class="absolute top-4 right-6 text-emerald-500/5 text-6xl"><i class="fas fa-check-double"></i></div></div></div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        window.onload = () => {
+            initRadar(); renderTricks();
+            runMathLab(); runSliceLab(); runLogicLab(); runCastingLab();
+        };
+    </script>
+</body>
+</html>
